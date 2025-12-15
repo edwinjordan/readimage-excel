@@ -6,7 +6,6 @@ Command-line interface for extracting features from images and exporting to Exce
 import argparse
 import os
 import sys
-from pathlib import Path
 from image_processor import ImageProcessor
 from excel_exporter import ExcelExporter
 
@@ -42,7 +41,7 @@ def process_single_image(image_path: str, output_path: str):
         features = processor.extract_all_features(image_path)
         exporter.export_single_image(features, output_path)
         print("Processing completed successfully!")
-    except Exception as e:
+    except (FileNotFoundError, ValueError, OSError, IOError) as e:
         print(f"Error processing image: {str(e)}")
         sys.exit(1)
 
@@ -68,7 +67,7 @@ def process_multiple_images(image_paths: list, output_path: str, with_summary: b
         try:
             features = processor.extract_all_features(image_path)
             features_list.append(features)
-        except Exception as e:
+        except (FileNotFoundError, ValueError, OSError, IOError) as e:
             print(f"  Warning: Error processing {image_path}: {str(e)}")
             continue
     
@@ -82,7 +81,7 @@ def process_multiple_images(image_paths: list, output_path: str, with_summary: b
         else:
             exporter.export_multiple_images(features_list, output_path)
         print(f"Processing completed! Processed {len(features_list)} images successfully.")
-    except Exception as e:
+    except (PermissionError, FileNotFoundError, ValueError, OSError) as e:
         print(f"Error exporting to Excel: {str(e)}")
         sys.exit(1)
 

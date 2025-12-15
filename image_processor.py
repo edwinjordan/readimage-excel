@@ -5,6 +5,7 @@ Extracts features and text from images using OCR and computer vision techniques.
 
 import cv2
 import numpy as np
+import os
 from PIL import Image
 import pytesseract
 from typing import Dict, List, Tuple, Any
@@ -46,7 +47,7 @@ class ImageProcessor:
             image = Image.open(image_path)
             text = pytesseract.image_to_string(image)
             return text.strip()
-        except Exception as e:
+        except (IOError, OSError, pytesseract.TesseractError) as e:
             return f"Error extracting text: {str(e)}"
     
     def get_image_properties(self, image_path: str) -> Dict[str, Any]:
@@ -64,7 +65,6 @@ class ImageProcessor:
         channels = image.shape[2] if len(image.shape) > 2 else 1
         
         # Calculate file size
-        import os
         file_size = os.path.getsize(image_path)
         
         return {

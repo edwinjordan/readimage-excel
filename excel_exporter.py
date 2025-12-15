@@ -46,7 +46,7 @@ class ExcelExporter:
                         cell_length = len(str(cell.value))
                         if cell_length > max_length:
                             max_length = cell_length
-                except:
+                except (TypeError, AttributeError):
                     pass
             
             adjusted_width = min(max_length + 2, 50)  # Max width of 50
